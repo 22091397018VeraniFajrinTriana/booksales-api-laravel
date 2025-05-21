@@ -49,3 +49,11 @@ Route::post('/sale-details', [SaleDetailController::class, 'store']);
 Route::get('/sale-details/{id}', [SaleDetailController::class, 'show']);
 Route::put('/sale-details/{id}', [SaleDetailController::class, 'update']);
 Route::delete('/sale-details/{id}', [SaleDetailController::class, 'destroy']);
+
+// Route untuk Genre
+Route::get('/genres', [App\Http\Controllers\GenreController::class, 'index']);
+Route::post('/genres', [App\Http\Controllers\GenreController::class, 'store']);
+
+// Route untuk Author
+Route::get('/authors', [App\Http\Controllers\AuthorController::class, 'index']);
+Route::post('/authors', [App\Http\Controllers\AuthorController::class, 'store']);
