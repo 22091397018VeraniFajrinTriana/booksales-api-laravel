@@ -6,6 +6,8 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SaleDetailController;
+use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\GenreController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,9 +53,13 @@ Route::put('/sale-details/{id}', [SaleDetailController::class, 'update']);
 Route::delete('/sale-details/{id}', [SaleDetailController::class, 'destroy']);
 
 // Route untuk Genre
-Route::get('/genres', [App\Http\Controllers\GenreController::class, 'index']);
-Route::post('/genres', [App\Http\Controllers\GenreController::class, 'store']);
+Route::get('/genres', [GenreController::class, 'index']);
+Route::post('/genres', [GenreController::class, 'store']);
 
 // Route untuk Author
-Route::get('/authors', [App\Http\Controllers\AuthorController::class, 'index']);
-Route::post('/authors', [App\Http\Controllers\AuthorController::class, 'store']);
+Route::get('/authors', [AuthorController::class, 'index']);
+Route::post('/authors', [AuthorController::class, 'store']);
+
+Route::get('/test', function() {
+    return response()->json(['message' => 'Test route works']);
+});
