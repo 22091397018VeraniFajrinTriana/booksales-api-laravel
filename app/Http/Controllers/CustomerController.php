@@ -2,29 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Book;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class BookController extends Controller
+class CustomerController extends Controller
 {
     /**
-     * Display a listing of the books.
+     * Display a listing of the customers.
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        $books = Book::all();
+        $customers = Customer::all();
         
         return response()->json([
             'status' => 'success',
-            'data' => $books
+            'data' => $customers
         ]);
     }
 
     /**
-     * Store a newly created book in storage.
+     * Store a newly created customer in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
@@ -32,12 +32,10 @@ class BookController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'author' => 'required|string|max:255',
-            'publisher' => 'required|string|max:255',
-            'publication_year' => 'required|integer',
-            'price' => 'required|numeric',
-            'stock' => 'required|integer'
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:customers',
+            'phone' => 'required|string|max:20',
+            'address' => 'required|string'
         ]);
 
         if ($validator->fails()) {
@@ -48,40 +46,40 @@ class BookController extends Controller
             ], 422);
         }
 
-        $book = Book::create($request->all());
+        $customer = Customer::create($request->all());
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Book created successfully',
-            'data' => $book
+            'message' => 'Customer created successfully',
+            'data' => $customer
         ], 201);
     }
 
     /**
-     * Display the specified book.
+     * Display the specified customer.
      *
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
-        $book = Book::find($id);
+        $customer = Customer::find($id);
         
-        if (!$book) {
+        if (!$customer) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Book not found'
+                'message' => 'Customer not found'
             ], 404);
         }
 
         return response()->json([
             'status' => 'success',
-            'data' => $book
+            'data' => $customer
         ]);
     }
 
     /**
-     * Update the specified book in storage.
+     * Update the specified customer in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -89,22 +87,20 @@ class BookController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $book = Book::find($id);
+        $customer = Customer::find($id);
         
-        if (!$book) {
+        if (!$customer) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Book not found'
+                'message' => 'Customer not found'
             ], 404);
         }
 
         $validator = Validator::make($request->all(), [
-            'title' => 'string|max:255',
-            'author' => 'string|max:255',
-            'publisher' => 'string|max:255',
-            'publication_year' => 'integer',
-            'price' => 'numeric',
-            'stock' => 'integer'
+            'name' => 'string|max:255',
+            'email' => 'string|email|max:255|unique:customers,email,' . $id,
+            'phone' => 'string|max:20',
+            'address' => 'string'
         ]);
 
         if ($validator->fails()) {
@@ -115,37 +111,37 @@ class BookController extends Controller
             ], 422);
         }
 
-        $book->update($request->all());
+        $customer->update($request->all());
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Book updated successfully',
-            'data' => $book
+            'message' => 'Customer updated successfully',
+            'data' => $customer
         ]);
     }
 
     /**
-     * Remove the specified book from storage.
+     * Remove the specified customer from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
-        $book = Book::find($id);
+        $customer = Customer::find($id);
         
-        if (!$book) {
+        if (!$customer) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Book not found'
+                'message' => 'Customer not found'
             ], 404);
         }
 
-        $book->delete();
+        $customer->delete();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Book deleted successfully'
+            'message' => 'Customer deleted successfully'
         ]);
     }
 }

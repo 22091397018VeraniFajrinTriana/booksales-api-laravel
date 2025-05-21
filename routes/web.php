@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthorController;
-use App\Http\Controllers\BookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,11 +14,8 @@ use App\Http\Controllers\BookController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return response()->json([
+        'message' => 'Welcome to Book Sales API',
+        'status' => 'success'
+    ]);
 });
-
-// Route untuk author
-Route::resource('authors', AuthorController::class);
-
-// Route untuk book
-Route::resource('books', BookController::class);

@@ -2,29 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Book;
+use App\Models\Sale;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class BookController extends Controller
+class SaleController extends Controller
 {
     /**
-     * Display a listing of the books.
+     * Display a listing of the sales.
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        $books = Book::all();
+        $sales = Sale::with('customer', 'saleDetails.book')->get();
         
         return response()->json([
             'status' => 'success',
-            'data' => $books
+            'data' => $sales
         ]);
     }
 
     /**
-     * Store a newly created book in storage.
+     * Store a newly created sale in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
@@ -32,12 +33,9 @@ class BookController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'author' => 'required|string|max:255',
-            'publisher' => 'required|string|max:255',
-            'publication_year' => 'required|integer',
-            'price' => 'required|numeric',
-            'stock' => 'required|integer'
+            'customer_id' => 'required|exists:customers,id',
+            'sale_date' => 'required|date',
+            'total_amount' => 'required|numeric'
         ]);
 
         if ($validator->fails()) {
@@ -48,40 +46,40 @@ class BookController extends Controller
             ], 422);
         }
 
-        $book = Book::create($request->all());
+        $sale = Sale::create($request->all());
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Book created successfully',
-            'data' => $book
+            'message' => 'Sale created successfully',
+            'data' => $sale
         ], 201);
     }
 
     /**
-     * Display the specified book.
+     * Display the specified sale.
      *
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
-        $book = Book::find($id);
+        $sale = Sale::with('customer', 'saleDetails.book')->find($id);
         
-        if (!$book) {
+        if (!$sale) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Book not found'
+                'message' => 'Sale not found'
             ], 404);
         }
 
         return response()->json([
             'status' => 'success',
-            'data' => $book
+            'data' => $sale
         ]);
     }
 
     /**
-     * Update the specified book in storage.
+     * Update the specified sale in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -89,22 +87,19 @@ class BookController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $book = Book::find($id);
+        $sale = Sale::find($id);
         
-        if (!$book) {
+        if (!$sale) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Book not found'
+                'message' => 'Sale not found'
             ], 404);
         }
 
         $validator = Validator::make($request->all(), [
-            'title' => 'string|max:255',
-            'author' => 'string|max:255',
-            'publisher' => 'string|max:255',
-            'publication_year' => 'integer',
-            'price' => 'numeric',
-            'stock' => 'integer'
+            'customer_id' => 'exists:customers,id',
+            'sale_date' => 'date',
+            'total_amount' => 'numeric'
         ]);
 
         if ($validator->fails()) {
@@ -115,37 +110,37 @@ class BookController extends Controller
             ], 422);
         }
 
-        $book->update($request->all());
+        $sale->update($request->all());
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Book updated successfully',
-            'data' => $book
+            'message' => 'Sale updated successfully',
+            'data' => $sale
         ]);
     }
 
     /**
-     * Remove the specified book from storage.
+     * Remove the specified sale from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
-        $book = Book::find($id);
+        $sale = Sale::find($id);
         
-        if (!$book) {
+        if (!$sale) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Book not found'
+                'message' => 'Sale not found'
             ], 404);
         }
 
-        $book->delete();
+        $sale->delete();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Book deleted successfully'
+            'message' => 'Sale deleted successfully'
         ]);
     }
 }
