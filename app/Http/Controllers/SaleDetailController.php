@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace app\Http\Controllers;
 
 use App\Models\SaleDetail;
 use App\Models\Sale;
@@ -8,7 +8,7 @@ use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class SaleDetailController extends Controller
+class SaleDetailController extends Controllers
 {
     /**
      * Display a listing of the sale details.

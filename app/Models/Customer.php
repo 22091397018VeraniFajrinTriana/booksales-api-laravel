@@ -4,24 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Book;
 
-class Author extends Model
+class Customer extends Model
 {
     use HasFactory;
-
+    
     protected $fillable = [
         'name',
         'email',
-        'bio',
-        'country'
+        'phone',
+        'address'
     ];
-
-    /**
-     * Get the books for the author.
-     */
-    public function books()
+    
+    public function sales()
     {
-        return $this->hasMany(Book::class);
+        return $this->hasMany(Sale::class);
     }
 }

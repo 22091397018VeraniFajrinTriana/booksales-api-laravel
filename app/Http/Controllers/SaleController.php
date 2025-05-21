@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace app\Http\Controllers;
 
 use App\Models\Sale;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class SaleController extends Controller
+class SaleController extends Controllers
 {
     /**
      * Display a listing of the sales.
