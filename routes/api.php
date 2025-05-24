@@ -52,11 +52,41 @@ Route::get('/sale-details/{id}', [SaleDetailController::class, 'show']);
 Route::put('/sale-details/{id}', [SaleDetailController::class, 'update']);
 Route::delete('/sale-details/{id}', [SaleDetailController::class, 'destroy']);
 
-// API Resource Routes untuk Genre (menggantikan routes manual)
-Route::apiResource('genres', GenreController::class);
+/*
+|--------------------------------------------------------------------------
+| Genre Routes with Middleware Protection
+|--------------------------------------------------------------------------
+*/
 
-// API Resource Routes untuk Author (menggantikan routes manual)
-Route::apiResource('authors', AuthorController::class);
+// Public routes untuk Genre (Read All dan Show)
+Route::get('/genres', [GenreController::class, 'index']); // Dapat diakses semua orang
+Route::get('/genres/{id}', [GenreController::class, 'show']); // Dapat diakses semua orang
+
+// Protected routes untuk Genre (Create, Update, Delete) - Hanya Admin
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::post('/genres', [GenreController::class, 'store']);
+    Route::put('/genres/{id}', [GenreController::class, 'update']);
+    Route::patch('/genres/{id}', [GenreController::class, 'update']); // Support PATCH method
+    Route::delete('/genres/{id}', [GenreController::class, 'destroy']);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Author Routes with Middleware Protection
+|--------------------------------------------------------------------------
+*/
+
+// Public routes untuk Author (Read All dan Show)
+Route::get('/authors', [AuthorController::class, 'index']); // Dapat diakses semua orang
+Route::get('/authors/{id}', [AuthorController::class, 'show']); // Dapat diakses semua orang
+
+// Protected routes untuk Author (Create, Update, Delete) - Hanya Admin
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::post('/authors', [AuthorController::class, 'store']);
+    Route::put('/authors/{id}', [AuthorController::class, 'update']);
+    Route::patch('/authors/{id}', [AuthorController::class, 'update']); // Support PATCH method
+    Route::delete('/authors/{id}', [AuthorController::class, 'destroy']);
+});
 
 Route::get('/test', function() {
     return response()->json(['message' => 'Test route works']);
@@ -64,20 +94,27 @@ Route::get('/test', function() {
 
 /*
 |--------------------------------------------------------------------------
-| Route API Resource akan menghasilkan endpoint berikut:
+| Route Structure Summary with Middleware
 |--------------------------------------------------------------------------
 |
-| Verb      URI                    Action       Route Name
-| GET       /api/genres            index        genres.index
-| POST      /api/genres            store        genres.store
-| GET       /api/genres/{id}       show         genres.show
-| PUT/PATCH /api/genres/{id}       update       genres.update
-| DELETE    /api/genres/{id}       destroy      genres.destroy
+| PUBLIC ROUTES (No Authentication Required):
+| GET    /api/genres           - List all genres
+| GET    /api/genres/{id}      - Show specific genre
+| GET    /api/authors          - List all authors  
+| GET    /api/authors/{id}     - Show specific author
 |
-| GET       /api/authors           index        authors.index
-| POST      /api/authors           store        authors.store
-| GET       /api/authors/{id}      show         authors.show
-| PUT/PATCH /api/authors/{id}      update       authors.update
-| DELETE    /api/authors/{id}      destroy      authors.destroy
+| ADMIN ONLY ROUTES (Requires Authentication + Admin Role):
+| POST   /api/genres           - Create new genre
+| PUT    /api/genres/{id}      - Update genre
+| PATCH  /api/genres/{id}      - Update genre (partial)
+| DELETE /api/genres/{id}      - Delete genre
+| POST   /api/authors          - Create new author
+| PUT    /api/authors/{id}     - Update author
+| PATCH  /api/authors/{id}     - Update author (partial)
+| DELETE /api/authors/{id}     - Delete author
+|
+| Middleware yang digunakan:
+| - auth:sanctum : Memastikan user sudah login/authenticated
+| - admin : Memastikan user memiliki role admin
 |
 */
